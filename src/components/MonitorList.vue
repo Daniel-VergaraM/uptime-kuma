@@ -64,6 +64,18 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
+                                <a class="dropdown-item" href="#" @click.prevent="openBulkEdit">
+                                    <font-awesome-icon icon="edit" class="me-2" />
+                                    {{ $t("Bulk edit") }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" @click.prevent="compareSelected">
+                                    <font-awesome-icon icon="chart-line" class="me-2" />
+                                    {{ $t("Compare") }}
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="#" @click.prevent="pauseDialog">
                                     <font-awesome-icon icon="pause" class="me-2" />
                                     {{ $t("Pause") }}
@@ -91,6 +103,7 @@
                 <span class="selected-count">
                     {{ $t("selectedMonitorCountMsg", selectedMonitorCount) }}
                 </span>
+                <BulkEditDialog ref="bulkEdit" :monitor-ids="selectedIDs" @applied="cancelSelectMode" />
             </div>
         </div>
         <div
@@ -132,10 +145,12 @@
 import Confirm from "../components/Confirm.vue";
 import MonitorListItem from "../components/MonitorListItem.vue";
 import MonitorListFilter from "./MonitorListFilter.vue";
+import BulkEditDialog from "./BulkEditDialog.vue";
 import { getMonitorRelativeURL } from "../util.ts";
 
 export default {
     components: {
+        BulkEditDialog,
         Confirm,
         MonitorListItem,
         MonitorListFilter,
@@ -225,6 +240,9 @@ export default {
 
         selectedMonitorCount() {
             return Object.keys(this.selectedMonitors).length;
+        },
+        selectedIDs() {
+            return Object.keys(this.selectedMonitors).map(Number);
         },
 
         /**
@@ -429,6 +447,20 @@ export default {
          */
         pauseDialog() {
             this.$refs.confirmPause.show();
+        },
+        /**
+         * Open the dialog that changes interval, group or tag for all selected monitors
+         * @returns {void}
+         */
+        openBulkEdit() {
+            this.$refs.bulkEdit.show();
+        },
+        /**
+         * Open the comparison page for the selected monitors
+         * @returns {void}
+         */
+        compareSelected() {
+            this.$router.push({ path: "/compare", query: { ids: this.selectedIDs.join(","), period: "24" } });
         },
         /**
          * Pause each selected monitor

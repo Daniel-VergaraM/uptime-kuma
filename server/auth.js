@@ -40,9 +40,14 @@ exports.login = async function (username, password) {
  * @param {string} key API key to verify
  * @returns {boolean} API is ok?
  */
-async function verifyAPIKey(key) {
+/**
+ * Look up a valid API key
+ * @param {string} key API key in the form uk<id>_<secret>
+ * @returns {Promise<{userID: number, scope: string}|null>} Owner and scope ("full" or "read"), or null if the key is missing, expired, inactive or wrong
+ */
+async function getAPIKeyDetails(key) {
     if (typeof key !== "string") {
-        return false;
+        return null;
     }
 
     // uk prefix + key ID is before _
@@ -52,16 +57,38 @@ async function verifyAPIKey(key) {
     let hash = await R.findOne("api_key", " id=? ", [index]);
 
     if (hash === null) {
-        return false;
+        return null;
     }
 
     let current = dayjs();
     let expiry = dayjs(hash.expires);
     if (expiry.diff(current) < 0 || !hash.active) {
-        return false;
+        return null;
     }
 
-    return hash && passwordHash.verify(clear, hash.key);
+    if (!(await passwordHash.verify(clear, hash.key))) {
+        return null;
+    }
+    return { userID: hash.user_id, scope: hash.scope === "read" ? "read" : "full" };
+}
+
+/**
+ * Find the user who owns a valid API key
+ * @param {string} key API key in the form uk<id>_<secret>
+ * @returns {Promise<number|null>} Owner user ID, or null if the key is not valid
+ */
+async function getAPIKeyOwner(key) {
+    const details = await getAPIKeyDetails(key);
+    return details ? details.userID : null;
+}
+
+/**
+ * Check whether an API key is valid
+ * @param {string} key API key in the form uk<id>_<secret>
+ * @returns {Promise<boolean>} True if the key is valid
+ */
+async function verifyAPIKey(key) {
+    return (await getAPIKeyOwner(key)) !== null;
 }
 
 /**
@@ -159,6 +186,9 @@ exports.basicAuth = async function (req, res, next) {
  * @param {express.NextFunction} next Next handler in chain
  * @returns {Promise<void>}
  */
+exports.getAPIKeyOwner = getAPIKeyOwner;
+exports.getAPIKeyDetails = getAPIKeyDetails;
+
 exports.apiAuth = async function (req, res, next) {
     if (!(await Settings.get("disableAuth"))) {
         let usingAPIKeys = await Settings.get("apiKeysEnabled");

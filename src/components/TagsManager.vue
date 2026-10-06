@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="mt-5 mb-3">{{ $t("Tags") }}</h4>
+        <h3 class="h4 mt-5 mb-3">{{ $t("Tags") }}</h3>
         <div v-if="selectedTags.length > 0" class="mb-2 p-1">
             <tag
                 v-for="item in selectedTags"
@@ -28,7 +28,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h4 v-if="stagedForBatchAdd.length > 0">{{ $t("Add Tags") }}</h4>
+                        <h3 class="h4" v-if="stagedForBatchAdd.length > 0">{{ $t("Add Tags") }}</h3>
                         <div
                             v-if="stagedForBatchAdd.length > 0"
                             class="mb-3 staging-area"

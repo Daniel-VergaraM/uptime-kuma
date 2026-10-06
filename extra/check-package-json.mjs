@@ -1,4 +1,7 @@
-import packageJSON from "../package.json" with { type: "json" };
+import { readFileSync } from "node:fs";
+
+// Read as text: JSON import attributes need a newer Node and a newer ESLint parser
+const packageJSON = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 let hasError = false;
 

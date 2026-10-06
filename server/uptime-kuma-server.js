@@ -145,6 +145,8 @@ class UptimeKumaServer {
         this.io = new Server(this.httpServer, {
             cors,
             cookie: true,
+            // Backups are sent over Socket.IO, the default 1 MB limit is too small for them
+            maxHttpBufferSize: 20 * 1024 * 1024,
             allowRequest: async (req, callback) => {
                 let transport;
                 // It should be always true, but just in case, because this property is not documented

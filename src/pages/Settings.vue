@@ -111,6 +111,9 @@ export default {
                 "api-keys": {
                     title: this.$t("API Keys"),
                 },
+                backup: {
+                    title: this.$t("Backup"),
+                },
                 proxies: {
                     title: this.$t("Proxies"),
                 },

@@ -1,0 +1,52 @@
+diff --git a/node_modules/vue-multiselect/dist/vue-multiselect.esm.js b/node_modules/vue-multiselect/dist/vue-multiselect.esm.js
+index f8573f6..3911c83 100644
+--- a/node_modules/vue-multiselect/dist/vue-multiselect.esm.js
++++ b/node_modules/vue-multiselect/dist/vue-multiselect.esm.js
+@@ -1159,7 +1159,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
+                   textContent: toDisplayString(_ctx.getOptionLabel(option))
+                 }, null, 8 /* PROPS */, ["textContent"]),
+                 createVNode("i", {
+-                  tabindex: "1",
++                  tabindex: "0", role: "button", "aria-label": "Remove",
+                   onKeypress: withKeys(withModifiers($event => (_ctx.removeElement(option)), ["prevent"]), ["enter"]),
+                   onMousedown: withModifiers($event => (_ctx.removeElement(option)), ["prevent"]),
+                   class: "multiselect__tag-icon"
+diff --git a/node_modules/vue-multiselect/dist/vue-multiselect.common.js b/node_modules/vue-multiselect/dist/vue-multiselect.common.js
+index db0b0a4..dcd9190 100644
+--- a/node_modules/vue-multiselect/dist/vue-multiselect.common.js
++++ b/node_modules/vue-multiselect/dist/vue-multiselect.common.js
+@@ -2919,7 +2919,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
+         }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+           textContent: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.getOptionLabel(option))
+         }, null, 8, _hoisted_4), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("i", {
+-          tabindex: "1",
++          tabindex: "0", role: "button", "aria-label": "Remove",
+           onKeypress: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withKeys"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withModifiers"])(function ($event) {
+             return _ctx.removeElement(option);
+           }, ["prevent"]), ["enter"]),
+diff --git a/node_modules/vue-multiselect/dist/vue-multiselect.js b/node_modules/vue-multiselect/dist/vue-multiselect.js
+index 0f276d9..df5c6da 100644
+--- a/node_modules/vue-multiselect/dist/vue-multiselect.js
++++ b/node_modules/vue-multiselect/dist/vue-multiselect.js
+@@ -1160,7 +1160,7 @@ var VueMultiselect = (function (exports, vue) {
+                     textContent: vue.toDisplayString(_ctx.getOptionLabel(option))
+                   }, null, 8 /* PROPS */, ["textContent"]),
+                   vue.createVNode("i", {
+-                    tabindex: "1",
++                    tabindex: "0", role: "button", "aria-label": "Remove",
+                     onKeypress: vue.withKeys(vue.withModifiers($event => (_ctx.removeElement(option)), ["prevent"]), ["enter"]),
+                     onMousedown: vue.withModifiers($event => (_ctx.removeElement(option)), ["prevent"]),
+                     class: "multiselect__tag-icon"
+diff --git a/node_modules/vue-multiselect/src/Multiselect.vue b/node_modules/vue-multiselect/src/Multiselect.vue
+index 45c7cfa..dfc32dd 100644
+--- a/node_modules/vue-multiselect/src/Multiselect.vue
++++ b/node_modules/vue-multiselect/src/Multiselect.vue
+@@ -28,7 +28,7 @@
+             <slot name="tag" :option="option" :search="search" :remove="removeElement">
+               <span class="multiselect__tag" :key="index">
+                 <span v-text="getOptionLabel(option)"></span>
+-                <i tabindex="1" @keypress.enter.prevent="removeElement(option)"
++                <i tabindex="0" role="button" aria-label="Remove" @keypress.enter.prevent="removeElement(option)"
+                    @mousedown.prevent="removeElement(option)" class="multiselect__tag-icon"></i>
+               </span>
+             </slot>

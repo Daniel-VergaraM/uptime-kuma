@@ -19,6 +19,9 @@ module.exports.maintenanceSocketHandler = (socket) => {
 
             log.debug("maintenance", maintenance);
 
+            // A new maintenance gets its id from the database. A client-supplied id would make R.store update another owner's row.
+            delete maintenance.id;
+
             let bean = await Maintenance.jsonToBean(R.dispense("maintenance"), maintenance);
             bean.user_id = socket.userID;
             let maintenanceID = await R.store(bean);

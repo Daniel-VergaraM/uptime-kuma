@@ -9,6 +9,20 @@ const { Settings } = require("../settings");
 const { sendAPIKeyList } = require("../client");
 
 /**
+ * Throw unless the API key exists and belongs to the user
+ * @param {string} userID Logged-in user
+ * @param {number} keyID API key ID
+ * @returns {Promise<void>}
+ * @throws {Error} The key does not exist or belongs to another user
+ */
+async function checkAPIKeyOwner(userID, keyID) {
+    const row = await R.getRow("SELECT id FROM api_key WHERE id = ? AND user_id = ? ", [keyID, userID]);
+    if (!row) {
+        throw new Error("Permission denied.");
+    }
+}
+
+/**
  * Handlers for API keys
  * @param {Socket} socket Socket.io instance
  * @returns {void}
@@ -98,7 +112,8 @@ module.exports.apiKeySocketHandler = (socket) => {
 
             log.debug("apikeys", `Disabled Key: ${keyID} User ID: ${socket.userID}`);
 
-            await R.exec("UPDATE api_key SET active = 0 WHERE id = ? ", [keyID]);
+            await checkAPIKeyOwner(socket.userID, keyID);
+            await R.exec("UPDATE api_key SET active = 0 WHERE id = ? AND user_id = ? ", [keyID, socket.userID]);
 
             apicache.clear();
 
@@ -123,7 +138,8 @@ module.exports.apiKeySocketHandler = (socket) => {
 
             log.debug("apikeys", `Enabled Key: ${keyID} User ID: ${socket.userID}`);
 
-            await R.exec("UPDATE api_key SET active = 1 WHERE id = ? ", [keyID]);
+            await checkAPIKeyOwner(socket.userID, keyID);
+            await R.exec("UPDATE api_key SET active = 1 WHERE id = ? AND user_id = ? ", [keyID, socket.userID]);
 
             apicache.clear();
 

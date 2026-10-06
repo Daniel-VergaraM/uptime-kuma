@@ -2,6 +2,19 @@ const { MonitorType } = require("./monitor-type");
 const { UP, log } = require("../../src/util");
 const dayjs = require("dayjs");
 const SftpClient = require("ssh2-sftp-client");
+const crypto = require("crypto");
+
+/**
+ * Check a server host key against a pinned SHA256 fingerprint, in the format ssh-keygen prints
+ * @param {Buffer} key Raw host key sent by the server
+ * @param {string} expected Fingerprint such as "SHA256:abc..." or just "abc..."
+ * @returns {boolean} True if the fingerprints match
+ */
+function hostKeyMatches(key, expected) {
+    const actual = crypto.createHash("sha256").update(key).digest("base64").replace(/=+$/, "");
+    const wanted = expected.trim().replace(/^SHA256:/, "").replace(/=+$/, "");
+    return actual === wanted;
+}
 
 /**
  * Converts a raw ssh2-sftp-client error into a clean, human-readable message.
@@ -71,6 +84,11 @@ class SFTPMonitorType extends MonitorType {
             }
         } else {
             connectOptions.password = monitor.sshPassword;
+        }
+
+        // Without a pinned fingerprint the server host key is not checked, which is the behavior before this option existed.
+        if (monitor.sshHostKeyFingerprint) {
+            connectOptions.hostVerifier = (key) => hostKeyMatches(key, monitor.sshHostKeyFingerprint);
         }
 
         let connected = false;

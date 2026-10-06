@@ -134,6 +134,10 @@ class RadiusClient {
 
                 let response;
                 try {
+                    // Reject replies whose Response Authenticator does not match this request and secret.
+                    if (!radius.verify_response({ request: encodedPacket, response: msg, secret: secret })) {
+                        return reject(new Error("RADIUS response authenticator is invalid"));
+                    }
                     response = radius.decode({ packet: msg, secret: secret });
                 } catch (error) {
                     return reject(new Error(`RADIUS response decoding failed: ${error.message}`));

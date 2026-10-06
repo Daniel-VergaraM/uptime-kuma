@@ -10,11 +10,14 @@ class Apprise extends NotificationProvider {
     async send(notification, msg, monitorJSON = null, heartbeatJSON = null) {
         const okMsg = "Sent Successfully.";
 
-        const args = ["-vv", "-b", msg, notification.appriseURL];
+        const args = ["-vv", "-b", msg];
         if (notification.title) {
             args.push("-t");
             args.push(notification.title);
         }
+        // "--" ends option parsing, so a URL that starts with "-" is never read as an apprise option.
+        args.push("--");
+        args.push(notification.appriseURL);
         const s = await childProcessAsync.spawn("apprise", args, {
             encoding: "utf8",
         });

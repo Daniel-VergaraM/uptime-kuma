@@ -126,14 +126,15 @@ optgroup {
     border-radius: 25px;
 }
 
+// Dark text on the green primary colour. White text on it fails the contrast ratio (WCAG AA).
 .btn-primary {
-    color: white;
+    color: $dark-font-color2;
 
     &:hover,
     &:active,
     &:focus,
     &.active {
-        color: white;
+        color: $dark-font-color2;
         background-color: $highlight;
         border-color: $highlight;
     }
@@ -334,6 +335,7 @@ optgroup {
     }
 
     .nav-pills .nav-link.active,
+    .nav-pills .nav-link.router-link-exact-active,
     .nav-pills .show > .nav-link {
         color: $dark-font-color2;
     }
@@ -674,3 +676,23 @@ $shadow-box-padding: 20px;
 // Localization
 
 @import "localization.scss";
+
+// The active header link (Vue Router marks it router-link-exact-active). Dark text on the green background.
+.nav-pills .nav-link.router-link-exact-active,
+.nav-pills .nav-link.active {
+    color: $dark-font-color2;
+}
+
+// Outline buttons: the bright green text fails contrast on white. A darker green passes, and hover uses dark text on the green.
+.btn-outline-primary {
+    color: #17633a;
+    border-color: $primary;
+
+    &:hover,
+    &:focus,
+    &:active {
+        color: $dark-font-color2;
+        background-color: $primary;
+        border-color: $primary;
+    }
+}

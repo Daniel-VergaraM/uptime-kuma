@@ -33,6 +33,11 @@
     margin-bottom: 0;
     padding: 6px 26px 6px 10px;
     background: $primary !important;
+    color: $dark-font-color2 !important;
+
+    > span {
+        color: $dark-font-color2 !important;
+    }
 }
 
 .multiselect__placeholder {

@@ -2,6 +2,7 @@
     <div class="input-group mb-3">
         <input
             ref="input"
+            :id="$attrs.id"
             v-model="model"
             :type="visibility"
             class="form-control"
@@ -23,6 +24,8 @@
 
 <script>
 export default {
+    // The id belongs on the <input>, so the <label for> points at it
+    inheritAttrs: false,
     props: {
         /** The value of the input */
         modelValue: {

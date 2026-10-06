@@ -601,6 +601,49 @@ export default {
         getMonitorChartData(monitorID, period, callback) {
             socket.emit("getMonitorChartData", monitorID, period, callback);
         },
+
+        /**
+         * Retrieves analytics (summary, response time series, incidents) for a monitor.
+         * @param {number} monitorID - The ID of the monitor.
+         * @param {number} periodHours - The time period in hours (24, 168 or 720).
+         * @param {socketCB} callback - The callback function to handle the analytics data.
+         * @returns {void}
+         */
+        getMonitorAnalytics(monitorID, periodHours, callback) {
+            socket.emit("getMonitorAnalytics", monitorID, periodHours, callback);
+        },
+
+        /**
+         * Raw checks of a monitor, for CSV export
+         * @param {number} monitorID ID of the monitor
+         * @param {number} hours Look back this many hours (1 to 2160)
+         * @param {socketCB} callback Receives { ok, data: { checks } }
+         * @returns {void}
+         */
+        getMonitorChecks(monitorID, hours, callback) {
+            socket.emit("getMonitorChecks", monitorID, hours, callback);
+        },
+
+        /**
+         * Create a backup of monitors, notifications, tags and status pages
+         * @param {string|null} passphrase When set, the backup is encrypted with it
+         * @param {socketCB} callback Receives { ok, data } where data is the backup
+         * @returns {void}
+         */
+        exportBackup(passphrase, callback) {
+            socket.emit("exportBackup", passphrase, callback);
+        },
+
+        /**
+         * Restore a backup file
+         * @param {object} backup Parsed backup file, plain or encrypted
+         * @param {string|null} passphrase Needed for an encrypted file
+         * @param {socketCB} callback Receives { ok, data } where data holds the counts and errors
+         * @returns {void}
+         */
+        importBackup(backup, passphrase, callback) {
+            socket.emit("importBackup", backup, passphrase, callback);
+        },
     },
 
     computed: {

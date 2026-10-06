@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard.vue";
 import DashboardHome from "./pages/DashboardHome.vue";
 import Details from "./pages/Details.vue";
 import EditMonitor from "./pages/EditMonitor.vue";
+import MonitorAnalytics from "./pages/MonitorAnalytics.vue";
 import EditMaintenance from "./pages/EditMaintenance.vue";
 import List from "./pages/List.vue";
 const Settings = () => import("./pages/Settings.vue");
@@ -18,6 +19,8 @@ import NotFound from "./pages/NotFound.vue";
 import DockerHosts from "./components/settings/Docker.vue";
 import ManageMaintenance from "./pages/ManageMaintenance.vue";
 import APIKeys from "./components/settings/APIKeys.vue";
+import Backup from "./components/settings/Backup.vue";
+import MonitorCompare from "./pages/MonitorCompare.vue";
 import SetupDatabase from "./pages/SetupDatabase.vue";
 
 // Settings - Sub Pages
@@ -65,6 +68,10 @@ const routes = [
                                         path: "/edit/:id",
                                         component: EditMonitor,
                                     },
+                                    {
+                                        path: "/analytics/:id",
+                                        component: MonitorAnalytics,
+                                    },
                                 ],
                             },
                         ],
@@ -82,6 +89,10 @@ const routes = [
                     {
                         path: "/list",
                         component: List,
+                    },
+                    {
+                        path: "/compare",
+                        component: MonitorCompare,
                     },
                     {
                         path: "/settings",
@@ -126,6 +137,10 @@ const routes = [
                             {
                                 path: "api-keys",
                                 component: APIKeys,
+                            },
+                            {
+                                path: "backup",
+                                component: Backup,
                             },
                             {
                                 path: "proxies",

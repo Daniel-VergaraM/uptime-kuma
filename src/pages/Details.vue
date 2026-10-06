@@ -138,6 +138,10 @@
                         <font-awesome-icon icon="clone" />
                         {{ $t("Clone") }}
                     </router-link>
+                    <router-link :to="'/analytics/' + monitor.id" class="btn btn-normal">
+                        <font-awesome-icon icon="chart-line" />
+                        {{ $t("Analytics") }}
+                    </router-link>
                     <button class="btn btn-normal text-danger" @click="deleteDialog">
                         <font-awesome-icon icon="trash" />
                         {{ $t("Delete") }}

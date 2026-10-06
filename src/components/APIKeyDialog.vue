@@ -16,6 +16,16 @@
                             <input id="name" v-model="key.name" type="text" class="form-control" required />
                         </div>
 
+                        <!-- Access -->
+                        <div class="mb-3">
+                            <label for="api-key-scope" class="form-label">{{ $t("Access") }}</label>
+                            <select id="api-key-scope" v-model="key.scope" class="form-select">
+                                <option value="full">{{ $t("Full access (read and change)") }}</option>
+                                <option value="read">{{ $t("Read only") }}</option>
+                            </select>
+                            <div class="form-text">{{ $t("apiKeyScopeHelp") }}</div>
+                        </div>
+
                         <!-- Expiry -->
                         <div class="my-3">
                             <label class="form-label">{{ $t("Expiry date") }}</label>
@@ -126,6 +136,7 @@ export default {
                 name: "",
                 expires: this.minDate,
                 active: 1,
+                scope: "full",
             };
 
             this.keyaddmodal.show();
@@ -164,6 +175,7 @@ export default {
                 name: "",
                 expires: this.minDate,
                 active: 1,
+                scope: "full",
             };
             this.noExpire = false;
         },

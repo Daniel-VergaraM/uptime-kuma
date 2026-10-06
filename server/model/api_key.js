@@ -31,6 +31,7 @@ class APIKey extends BeanModel {
             active: this.active,
             expires: this.expires,
             status: this.getStatus(),
+            scope: this.scope,
         };
     }
 
@@ -48,6 +49,7 @@ class APIKey extends BeanModel {
             active: this.active,
             expires: this.expires,
             status: this.getStatus(),
+            scope: this.scope,
         };
     }
 
@@ -66,6 +68,8 @@ class APIKey extends BeanModel {
         bean.user_id = userID;
         bean.active = key.active;
         bean.expires = key.expires;
+        // Anything other than "read" is a full-access key
+        bean.scope = key.scope === "read" ? "read" : "full";
 
         await R.store(bean);
 

@@ -846,6 +846,23 @@
                                     </select>
                                 </div>
 
+                                <!-- Host key pin -->
+                                <div class="my-3">
+                                    <label for="ssh_host_key_fingerprint" class="form-label">
+                                        {{ $t("sshHostKeyFingerprint") }}
+                                        <span class="text-muted small">({{ $t("optional") }})</span>
+                                    </label>
+                                    <input
+                                        id="ssh_host_key_fingerprint"
+                                        v-model="monitor.sshHostKeyFingerprint"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="SHA256:..."
+                                        autocomplete="off"
+                                    />
+                                    <div class="form-text">{{ $t("sshHostKeyFingerprintHelpText") }}</div>
+                                </div>
+
                                 <!-- Password auth -->
                                 <div v-if="monitor.sshAuthMethod !== 'privateKey'" class="my-3">
                                     <label for="ssh_password" class="form-label">{{ $t("Password") }}</label>
@@ -944,7 +961,7 @@
 
                             <!-- NTP Configuration -->
                             <template v-if="monitor.type === 'ntp'">
-                                <h4 class="mt-4">{{ $t("ntpThresholdsTitle") }}</h4>
+                                <h3 class="h4 mt-4">{{ $t("ntpThresholdsTitle") }}</h3>
 
                                 <div class="my-3">
                                     <label for="ntp-stratum-threshold" class="form-label">
@@ -1649,6 +1666,22 @@
                                 </div>
                             </div>
 
+                            <!-- SLO target -->
+                            <div class="my-3">
+                                <label for="slo-target" class="form-label">{{ $t("SLO target (%)") }}</label>
+                                <input
+                                    id="slo-target"
+                                    v-model="monitor.sloTarget"
+                                    type="number"
+                                    class="form-control"
+                                    min="0.001"
+                                    max="100"
+                                    step="0.001"
+                                    :placeholder="$t('No SLO target set')"
+                                />
+                                <div class="form-text">{{ $t("sloTargetHelp") }}</div>
+                            </div>
+
                             <div class="my-3">
                                 <label for="maxRetries" class="form-label">{{ $t("Retries") }}</label>
                                 <input
@@ -2038,6 +2071,9 @@
 
                                     <VueMultiselect
                                         id="acceptedStatusCodes"
+                                        :aria-expanded="acceptedStatusCodesOpen ? 'true' : 'false'"
+                                        @open="acceptedStatusCodesOpen = true"
+                                        @close="acceptedStatusCodesOpen = false"
                                         v-model="monitor.accepted_statuscodes"
                                         :options="acceptedWebsocketCodeOptions"
                                         :multiple="true"
@@ -2183,6 +2219,9 @@
 
                                     <VueMultiselect
                                         id="acceptedStatusCodes"
+                                        :aria-expanded="acceptedStatusCodesOpen ? 'true' : 'false'"
+                                        @open="acceptedStatusCodesOpen = true"
+                                        @close="acceptedStatusCodesOpen = false"
                                         v-model="monitor.accepted_statuscodes"
                                         :options="acceptedStatusCodeOptions"
                                         :multiple="true"
@@ -2708,7 +2747,7 @@
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h3 class="h4 mt-5 mb-2">{{ $t("Authentication") }}</h3>
 
                                 <!-- Method -->
                                 <div class="my-3">
@@ -2942,7 +2981,7 @@
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h3 class="h4 mt-5 mb-2">{{ $t("Authentication") }}</h3>
 
                                 <!-- Method -->
                                 <div class="my-3">
@@ -3367,6 +3406,7 @@ const monitorDefaults = {
     interval: 60,
     humanReadableInterval: timeDurationFormatter.secondsToHumanReadableFormat(60),
     retryInterval: 60,
+    sloTarget: null,
     resendInterval: 0,
     maxretries: 0,
     retryOnlyOnStatusCodeFailure: false,
@@ -3414,6 +3454,7 @@ const monitorDefaults = {
     conditions: [],
     system_service_name: "",
     sshAuthMethod: "password",
+    sshHostKeyFingerprint: "",
     ntpStratumThreshold: 5,
     ntpTimeOffsetThreshold: 1000,
     ntpRootDispersionThreshold: 500,
@@ -3445,6 +3486,7 @@ export default {
                 // Do not add default value here, please check init() method
             },
             domainExpiryUnsupportedReason: null,
+            acceptedStatusCodesOpen: false,
             checkDomainDebounce: null,
             acceptedStatusCodeOptions: [],
             acceptedWebsocketCodeOptions: [],

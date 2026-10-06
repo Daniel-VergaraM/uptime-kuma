@@ -147,6 +147,7 @@ class Monitor extends BeanModel {
             timeout: this.timeout,
             interval: this.interval,
             retryInterval: this.retryInterval,
+            sloTarget: this.sloTarget ?? null,
             retryOnlyOnStatusCodeFailure: Boolean(this.retry_only_on_status_code_failure),
             resendInterval: this.resendInterval,
             keyword: this.keyword,
@@ -207,6 +208,7 @@ class Monitor extends BeanModel {
             expectedTlsAlert: this.expected_tls_alert,
             sftpPath: this.sftpPath,
             sshAuthMethod: this.sshAuthMethod || "password",
+            sshHostKeyFingerprint: this.sshHostKeyFingerprint,
 
             // ping advanced options
             ping_numeric: this.isPingNumeric(),

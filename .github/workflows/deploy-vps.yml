@@ -2,7 +2,7 @@ name: Deploy Uptime Kuma (fork) to VPS
 
 on:
   push:
-    branches: [feat/monitor-analytics]
+    branches: [feature/monitor-analytics]
 
   workflow_dispatch:
 

@@ -17,7 +17,4 @@ services:
 networks:
   dv-net:
     external: true
-    # This must be the actual docker network name used by the vps stack's
-    # Caddy container, so reverse_proxy uptime-kuma:3001 can resolve this
-    # container by name. Run `docker network ls` on the VPS to confirm —
-    # if it's not literally "dv-net" (e.g. "vps_dv-net"), set `name:` here.
+    name: main_dv-net

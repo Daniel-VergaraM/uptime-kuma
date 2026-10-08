@@ -19,9 +19,11 @@ class EmbeddedMariaDB {
 
     /**
      * The username to connect to the MariaDB
+     * Set eagerly (not inside start()), because createAuthDatabase() may build a connection pool
+     * that reads this field before start() has run.
      * @type {string}
      */
-    username = null;
+    username = require("os").userInfo().username;
 
     /**
      * @type {ChildProcessWithoutNullStreams}

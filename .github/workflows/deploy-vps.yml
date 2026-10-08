@@ -70,14 +70,14 @@ jobs:
                 git clone --branch feature/monitor-analytics --depth 1 "https://github.com/${{ github.repository }}.git" "$PROJECT_DIR"
             fi
 
-            if [ ! -f "$PROJECT_DIR/docker-compose.yml" ]; then
-                echo "No se encontró docker-compose.yml"
+            if [ ! -f "$PROJECT_DIR/compose.yaml" ]; then
+                echo "No se encontró compose.yaml"
                 return 1
             fi
 
 
             echo "Construyendo e iniciando contenedores..."
-            docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d --build --force-recreate --remove-orphans
+            docker compose -f "$PROJECT_DIR/compose.yaml" up -d --build --force-recreate --remove-orphans
           }
 
           wait_service() {
@@ -85,7 +85,7 @@ jobs:
               timeout_secs="$2"
               elapsed=0
               while [ "$elapsed" -lt "$timeout_secs" ]; do
-                  cid=$(docker compose -f "$PROJECT_DIR/docker-compose.yml" ps -q "$service" || true)
+                  cid=$(docker compose -f "$PROJECT_DIR/compose.yaml" ps -q "$service" || true)
                   if [ -n "$cid" ]; then
                       status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$cid" 2>/dev/null || true)
                       if [ "$status" = "healthy" ] || [ "$status" = "running" ]; then
@@ -129,7 +129,7 @@ jobs:
 
               git -C "$PROJECT_DIR" reset --hard last-known-good
 
-              docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d --build --force-recreate --remove-orphans
+              docker compose -f "$PROJECT_DIR/compose.yaml" up -d --build --force-recreate --remove-orphans
 
               if healthcheck; then
                   echo "Rollback exitoso. El sistema vuelve a estar estable."

@@ -63,11 +63,11 @@ jobs:
             if [ -d "$PROJECT_DIR/.git" ]; then
                 echo "Actualizando repositorio en VPS..."
                 git -C "$PROJECT_DIR" fetch --depth=10 --prune origin
-                git -C "$PROJECT_DIR" checkout -f main
-                git -C "$PROJECT_DIR" reset --hard origin/main
+                git -C "$PROJECT_DIR" checkout -f feature/monitor-analytics
+                git -C "$PROJECT_DIR" reset --hard origin/feature/monitor-analytics
             else
                 echo "Clonando repositorio en VPS..."
-                git clone --branch main --depth 1 "https://github.com/${{ github.repository }}.git" "$PROJECT_DIR"
+                git clone --branch feature/monitor-analytics --depth 1 "https://github.com/${{ github.repository }}.git" "$PROJECT_DIR"
             fi
 
             if [ ! -f "$PROJECT_DIR/docker-compose.yml" ]; then
@@ -110,7 +110,7 @@ jobs:
             return $health_failed
           }
 
-          # Intento 1: desplegar el commit actual de main
+          # Intento 1: desplegar el commit actual de feature/monitor-analytics
           if deploy_current; then
               if ! healthcheck; then
                   DEPLOY_FAILED=1
@@ -173,7 +173,7 @@ jobs:
         if: always()
         run: |
           echo "### Deploy de Uptime Kuma (fork) en VPS ejecutado" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Rama: \`main\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Rama: \`feature/monitor-analytics\`" >> "$GITHUB_STEP_SUMMARY"
           if [ "${ROLLED_BACK:-0}" = "1" ]; then
             echo "- El despliegue del commit actual falló y se aplicó **rollback** al último commit funcional." >> "$GITHUB_STEP_SUMMARY"
           elif [ "${DEPLOY_FAILED:-0}" = "1" ]; then

@@ -106,7 +106,7 @@ jobs:
 
           healthcheck() {
             health_failed=0
-            wait_service pmc 120 || health_failed=1
+            wait_service uptime-kuma 120 || health_failed=1
             return $health_failed
           }
 
